@@ -4,7 +4,7 @@ echo   FixIt - Push to GitHub Repository
 echo ============================================================
 echo.
 
-cd /d "C:\Users\adars\.gemini\antigravity\scratch\fixit"
+cd /d "%~dp0"
 
 echo Step 1: Please enter your GitHub repository URL.
 echo Example: https://github.com/yourusername/fixit.git
