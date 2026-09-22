@@ -74,7 +74,7 @@ const uploadToCloudinaryOrLocal = async (file, folder = 'fixit_complaints') => {
     fs.copyFileSync(file.path, filepath);
   }
 
-  const baseUrl = process.env.SERVER_URL || `http://localhost:${process.env.PORT || 5000}`;
+  const baseUrl = process.env.SERVER_URL || process.env.RENDER_EXTERNAL_URL || `http://localhost:${process.env.PORT || 5000}`;
   return `${baseUrl}/uploads/${filename}`;
 };
 

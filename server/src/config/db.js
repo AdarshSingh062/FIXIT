@@ -13,6 +13,10 @@ const connectDB = async () => {
   } catch (error) {
     logger.warn(`Local MongoDB connection failed at (${mongoUri}): ${error.message}`);
 
+    if (process.env.NODE_ENV === 'production') {
+      logger.error('Production MongoDB connection failed. Please verify that MONGO_URI is properly set in your Render environment variables and that your MongoDB Atlas Network Access allows connections (0.0.0.0/0).');
+    }
+
     // Try starting in-memory MongoDB for seamless zero-setup evaluation if local MongoDB daemon isn't running
     try {
       logger.info('Attempting fallback to in-memory MongoDB server for instant zero-config execution...');
@@ -31,8 +35,8 @@ const connectDB = async () => {
 
       return conn;
     } catch (memErr) {
-      logger.error('Could not start in-memory MongoDB either. Please provide a valid MONGO_URI in server/.env (e.g. MongoDB Atlas connection string).');
-      logger.warn('Server will continue running so frontend and static assets remain accessible.');
+      logger.error('Could not start database. Please provide a valid MONGO_URI in your environment variables (e.g. MongoDB Atlas connection string).');
+      logger.warn('Server will continue running so health check and status routes remain responsive.');
     }
   }
 };
