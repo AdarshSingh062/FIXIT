@@ -104,6 +104,30 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+// Database 1-click seed route for initializing cloud databases (MongoDB Atlas)
+app.get('/api/seed', async (req, res) => {
+  try {
+    const seedDatabase = require('./utils/seedData');
+    await seedDatabase();
+    res.status(200).json({
+      success: true,
+      message: 'MongoDB Atlas database seeded successfully! All demo accounts are active.',
+      demoAccounts: {
+        admin: { email: 'admin@fixit.com', password: 'Admin@123' },
+        workerRoads: { email: 'worker.roads@fixit.com', password: 'Worker@123' },
+        workerElectric: { email: 'worker.electric@fixit.com', password: 'Worker@123' },
+        workerSanitation: { email: 'worker.sanitation@fixit.com', password: 'Worker@123' },
+        citizen: { email: 'citizen@fixit.com', password: 'User@123' }
+      }
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: `Database seeding failed: ${error.message}`
+    });
+  }
+});
+
 // Mount API routes
 app.use('/api/auth', authRoutes);
 app.use('/api/complaints', complaintRoutes);
