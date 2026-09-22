@@ -9,6 +9,20 @@ const connectDB = async () => {
       serverSelectionTimeoutMS: 5000 // 5 seconds timeout
     });
     logger.info(`MongoDB Connected successfully: ${conn.connection.host}`);
+
+    // Check if initial seeding is needed (e.g. fresh MongoDB Atlas cluster)
+    try {
+      const User = require('../models/User');
+      const userCount = await User.countDocuments();
+      if (userCount === 0) {
+        logger.info('Fresh database detected. Auto-seeding initial categories, accounts, and demo data...');
+        const seedDatabase = require('../utils/seedData');
+        await seedDatabase().catch((err) => logger.warn(`Auto-seed warning: ${err.message}`));
+      }
+    } catch (seedCheckErr) {
+      logger.warn(`Could not verify seed state: ${seedCheckErr.message}`);
+    }
+
     return conn;
   } catch (error) {
     logger.warn(`Local MongoDB connection failed at (${mongoUri}): ${error.message}`);

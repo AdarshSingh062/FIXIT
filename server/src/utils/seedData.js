@@ -521,14 +521,15 @@ const seedDatabase = async () => {
     logger.info('  CITIZEN:  citizen@fixit.com          / User@123');
     logger.info('==========================================');
 
-    if (process.env.NODE_ENV !== 'test') {
+    if (require.main === module && process.env.NODE_ENV !== 'test') {
       process.exit(0);
     }
   } catch (error) {
     logger.error('Database seeding failed:', error);
-    if (process.env.NODE_ENV !== 'test') {
+    if (require.main === module && process.env.NODE_ENV !== 'test') {
       process.exit(1);
     }
+    throw error;
   }
 };
 
