@@ -1,7 +1,21 @@
 import axios from 'axios';
 
+let rawApiUrl = (import.meta.env.VITE_API_URL || '').trim().replace(/\/$/, '');
+
+// Auto-clean accidental /health suffix if added by mistake
+if (rawApiUrl.endsWith('/health')) {
+  rawApiUrl = rawApiUrl.replace(/\/health$/, '');
+}
+
+// If deployed on Vercel and env var is missing, point to live Render backend
+if (!rawApiUrl && typeof window !== 'undefined' && window.location.hostname.includes('vercel.app')) {
+  rawApiUrl = 'https://fixit-4fw6.onrender.com/api';
+}
+
+const baseURL = rawApiUrl || '/api';
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || '/api',
+  baseURL,
   headers: {
     'Content-Type': 'application/json'
   }

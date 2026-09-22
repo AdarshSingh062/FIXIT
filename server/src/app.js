@@ -46,6 +46,8 @@ app.use(
       if (
         allowedOrigins.includes('*') ||
         allowedOrigins.includes(normalizedOrigin) ||
+        normalizedOrigin.endsWith('.vercel.app') ||
+        normalizedOrigin.endsWith('.onrender.com') ||
         process.env.NODE_ENV !== 'production'
       ) {
         return callback(null, true);
