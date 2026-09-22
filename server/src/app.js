@@ -74,6 +74,24 @@ app.use('/uploads', express.static(publicUploads));
 // Apply API rate limiting
 app.use('/api', apiLimiter);
 
+// Root landing route for friendly status display on Render
+app.get('/', (req, res) => {
+  res.status(200).json({
+    success: true,
+    name: 'FixIt API Platform',
+    version: '1.0.0',
+    status: 'ONLINE',
+    message: 'FixIt Backend Server is successfully running on Render!',
+    endpoints: {
+      health: '/api/health',
+      categories: '/api/categories',
+      auth: '/api/auth/login',
+      complaints: '/api/complaints'
+    },
+    timestamp: new Date().toISOString()
+  });
+});
+
 // Health check route
 app.get('/api/health', (req, res) => {
   res.status(200).json({
